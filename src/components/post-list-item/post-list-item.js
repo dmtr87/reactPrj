@@ -8,13 +8,13 @@ const PostListItem = () => {
                 Мысли вслух
             </span>
             <div className="d-flex justify-content-center align-items-center">
-                <button className="btn-star btn-sm">
-                    <i className="fa fa-star"></i>
+                <button type="button" className="btn-star btn-sm">
+                    <i class="fa fa-star"></i>
                 </button>
-                <button className="btn-trash btn-sm">
+                <button type="button" className="btn-trash btn-sm">
                     <i className="fa fa-trash-o"></i>
                 </button>
-                <i className="fa fa-heart"></i>
+                <i class="fa fa-heart"></i>
             </div>
         </li>
     )
