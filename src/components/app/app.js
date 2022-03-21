@@ -2,6 +2,7 @@ import React from 'react';
 import AppHeader from '../app-header';
 import SearchPanel from '../search-panel';
 import PostStatusFilter from '../post-status-filter';
+import PostList from '../post-list';
 
 
 
@@ -14,6 +15,7 @@ const App = () => {
                 <SearchPanel/>
                 <PostStatusFilter/>
             </div>
+            <PostList/>
         </div>
     
     )
