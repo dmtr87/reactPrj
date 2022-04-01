@@ -2,22 +2,29 @@ import React from "react";
 import "./post-list-item.css";
 
 
-const PostListItem = () => {
+const PostListItem = ({label,important= false}) => {
+
+    let classNames= "app-list-item  d-flex justify-content-between"
+    
+    if(important){
+        classNames += " important"
+    }
+
     return (
-        <li className="app-list-item  d-flex justify-content-between">
+        <div className={classNames}>
             <span className="app-list-item-label">
-                Мысли вслух
+                {label}
             </span>
             <div className="d-flex justify-content-center align-items-center">
                 <button type="button" className="btn-star btn-sm">
-                    <i class="fa fa-star"></i>
+                    <i className="fa fa-star"></i>
                 </button>
                 <button type="button" className="btn-trash btn-sm">
                     <i className="fa fa-trash-o"></i>
                 </button>
-                <i class="fa-brands fa-gratipay"></i>
+                <i className="fa-brands fa-gratipay"></i>
             </div>
-        </li>
+        </div>
     )
 }
 

@@ -10,6 +10,13 @@ import "./app.css";
 
 
 const App = () => {
+
+    const dataBase= [
+        {label:"Дособирать гидрофор", important: true, id:'asdasd'},
+        {label:"Подтянуть помпу", important: false, id:'awdawd'},
+        {label:"Поколоть дрова", important: false, id:'acxa'}
+    ]
+
     return (
         <div className='app'>
             <AppHeader/>
@@ -17,7 +24,7 @@ const App = () => {
                 <SearchPanel/>
                 <PostStatusFilter/>
             </div>
-            <PostList/>
+            <PostList data={dataBase}/>
             <PostAddForm/>
         </div>
     
