@@ -21,12 +21,14 @@ export default class  App extends React.Component {
         super(props);
         this.state= {
             dataBase: [
-                {label:"Дособирать гидрофор", important: true, id:'asdasd'},
-                {label:"Подтянуть помпу", important: false, id:'awdawd'},
-                {label:"Поколоть дрова", important: false, id:'acxa'}
+                {label:"Дособирать гидрофор", important: true, id: 1},
+                {label:"Подтянуть помпу", important: false, id: 2},
+                {label:"Поколоть дрова", important: false, id: 3}
             ]
         }
         this.deletePost= this.deletePost.bind(this);
+        this.addPost= this.addPost.bind(this);
+        this.maxId = 4;
     }
     deletePost (id){
         this.setState(({dataBase}) => {
@@ -42,6 +44,23 @@ export default class  App extends React.Component {
             }
         })
     }
+
+    addPost(body){
+        const newPost = {
+            label: body,
+            important: false,
+            id: this.maxId++
+        }
+
+        this.setState(({dataBase}) => {
+            const newArrPost = [...dataBase, newPost];
+
+            return {
+                dataBase: newArrPost
+            }
+        })
+
+    }
     
     render () {
         return (
@@ -51,8 +70,11 @@ export default class  App extends React.Component {
                     <SearchPanel/>
                     <PostStatusFilter/>
                 </div>
-                <PostList data={this.state.dataBase} onDelete= {this.deletePost}/>
-                <PostAddForm/>
+                <PostList 
+                    data={this.state.dataBase} 
+                    onDelete= {this.deletePost}/>
+                <PostAddForm 
+                    onAdd={this.addPost}/>
             </AppBlock>
         
         )
