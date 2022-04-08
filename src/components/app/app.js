@@ -21,24 +21,26 @@ export default class  App extends React.Component {
         super(props);
         this.state= {
             dataBase: [
-                {label:"Дособирать гидрофор", important: true, id: 1},
-                {label:"Подтянуть помпу", important: false, id: 2},
-                {label:"Поколоть дрова", important: false, id: 3}
+                {label:"Дособирать гидрофор", important: true,like: false, id: 1},
+                {label:"Подтянуть помпу", important: false,like: false, id: 2},
+                {label:"Поколоть дрова", important: false,like: false, id: 3}
             ]
         }
         this.deletePost= this.deletePost.bind(this);
         this.addPost= this.addPost.bind(this);
+        this.onToggleImpotent= this.onToggleImpotent.bind(this);
+        this.onToggleLike= this.onToggleLike.bind(this);
         this.maxId = 4;
     }
     deletePost (id){
         this.setState(({dataBase}) => {
             const indexPost= dataBase.findIndex((post) => post.id === id);
-
             const beforeIndex= dataBase.slice(0,indexPost);
+            console.log(beforeIndex);
             const afterIndex= dataBase.slice(indexPost + 1)
-            
+            console.log(afterIndex);
             const newDB= [...beforeIndex,...afterIndex];
-
+            console.log(newDB);
             return {
                 dataBase: newDB
             }
@@ -51,15 +53,36 @@ export default class  App extends React.Component {
             important: false,
             id: this.maxId++
         }
-
         this.setState(({dataBase}) => {
             const newArrPost = [...dataBase, newPost];
-
-            return {
+            return { 
                 dataBase: newArrPost
             }
         })
+    }
 
+    onToggleImpotent(id){
+        console.log(`Impotent ${id}`)
+    }
+
+
+    onToggleLike(id) {
+        this.setState(({dataBase}) => {
+            const indexPost= dataBase.findIndex((elem) => elem.id === id);
+            
+            const beforeIndexPost = dataBase.slice(0, indexPost);
+            const afterIndexPost = dataBase.slice(indexPost + 1);
+
+            const oldPost = dataBase[indexPost];
+            const newPost = {...oldPost, like: !oldPost.like}
+            const newArr = [...beforeIndexPost, newPost, ...afterIndexPost]
+           
+            return{
+                dataBase: newArr
+            }
+
+
+        })
     }
     
     render () {
@@ -72,7 +95,9 @@ export default class  App extends React.Component {
                 </div>
                 <PostList 
                     data={this.state.dataBase} 
-                    onDelete= {this.deletePost}/>
+                    onDelete= {this.deletePost}
+                    onToggleImpotent= {this.onToggleImpotent}
+                    onToggleLike= {this.onToggleLike}/>
                 <PostAddForm 
                     onAdd={this.addPost}/>
             </AppBlock>
