@@ -25,12 +25,14 @@ export default class  App extends React.Component {
                 {label:"Подтянуть помпу", important: false,like: false, id: 2},
                 {label:"Поколоть дрова", important: false,like: false, id: 3}
             ],
-            term: ''   /// строка поиска , т.к. она будет меняться значиту неё должно быть состояние.
+            term: ''   /// строка поиска в которую будем писать то что хотим найти , т.к. она будет меняться значит у неё должно быть состояние.
         }
         this.deletePost= this.deletePost.bind(this);
         this.addPost= this.addPost.bind(this);
         this.onToggleImpotent= this.onToggleImpotent.bind(this);
         this.onToggleLike= this.onToggleLike.bind(this);
+        this.onUpdateSearchPost= this.onUpdateSearchPost.bind(this);
+        
         this.maxId = 4;
     }
     deletePost (id){
@@ -128,19 +130,34 @@ export default class  App extends React.Component {
 
     }
     
-    searchPos (items, term) {
-        if(term.lenght === 0) {
+    searchPost (items, term) {
+        // Проверяем кол-во символов в term , если пусто(пользователь нечего не ввел или стер) тогда мы возвращаем посты которые у нас прихоят в dataBase (в оригиналe)
+        if(term.lenght === 0) { 
             return items
         }
+        //Возвращаем .  Фильтруем( с помощью filter()) все обьекты на предмет совпадения ( с помощью indexOf()) в них  то что ввёл пользователь (term) . Если нету совпадений то indexOf выдает -1  а мы ВОЗВРАЩАЕМ ТОЛЬКО совпадения след всё что больше -1.
+        return items.filter((item) => {
+            return item.label.indexOf(term) > -1;
+        })
 
     }
-    
+        //Этот метод обновляет наш state.term из search-panel
+    onUpdateSearchPost(term) {
+        this.setState({
+            term: term
+        })
+
+    }
     render () {
-        const {dataBase}=this.state;
+        const {dataBase, term}=this.state;
         const liked = dataBase.filter((item) => item.like).length;
         const allPost = dataBase.length;
 
+        //Мы это делаем для того что бы при вводе в посковую строку высвечивалсь только те посты в которых есть совпадения (searchPost (items, term))
+        // visiblePosts содержит  посты которые совпадают с тем что ввёл польховаель в строку поиска (term)
+        const visiblePosts = this.searchPost(dataBase, term);
 
+        
 
         return (
             <AppBlock >
@@ -148,11 +165,12 @@ export default class  App extends React.Component {
                 liked={liked}
                 allPost={allPost}/>
                 <div className='search-panel d-flex'>
-                    <SearchPanel/>
+                    <SearchPanel
+                    onUpdateSearchPost={this.onUpdateSearchPost}/>
                     <PostStatusFilter/>
                 </div>
                 <PostList 
-                    data={this.state.dataBase} 
+                    visiblePosts={visiblePosts} 
                     onDelete= {this.deletePost}
                     onToggleImpotent= {this.onToggleImpotent}
                     onToggleLike= {this.onToggleLike}/>

@@ -4,9 +4,9 @@ import {ListGroup} from 'reactstrap'
 import "./post-list.css";
 
 
-const PostList = ({data,onDelete,onToggleImpotent,onToggleLike}) => {
+const PostList = ({visiblePosts,onDelete,onToggleImpotent,onToggleLike}) => {
 
-    const newPost= data.map((item) => {
+    const newPost= visiblePosts.map((item) => {
         const {id, ...itemProps}= item;
         return(
             <li key={id} className="list-group-item">
