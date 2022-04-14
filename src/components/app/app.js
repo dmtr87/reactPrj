@@ -25,13 +25,15 @@ export default class  App extends React.Component {
                 {label:"Подтянуть помпу", important: false,like: false, id: 2},
                 {label:"Поколоть дрова", important: false,like: false, id: 3}
             ],
-            term: ''   /// строка поиска в которую будем писать то что хотим найти , т.к. она будет меняться значит у неё должно быть состояние.
+            term: '',   /// строка поиска в которую будем писать то что хотим найти , т.к. она будет меняться значит у неё должно быть состояние.
+            filter: 'all'  //По умолчанию фильер вкл в позицию Показать всё
         }
         this.deletePost= this.deletePost.bind(this);
         this.addPost= this.addPost.bind(this);
         this.onToggleImpotent= this.onToggleImpotent.bind(this);
         this.onToggleLike= this.onToggleLike.bind(this);
         this.onUpdateSearchPost= this.onUpdateSearchPost.bind(this);
+        this.onFilterSelect= this.onFilterSelect.bind(this);
         
         this.maxId = 4;
     }
@@ -129,6 +131,15 @@ export default class  App extends React.Component {
         })
 
     }
+    // Мы предполагаем что имеет в filter  2 значения(all или like) Мы проверяем если в state.filter значение 'like '  значит мы должны отфильтровать весь массив с обьектами и создать новый ( filter создает новый массив) в котором  item.like = true.
+    // Иначе state.filter =all  и мы должны вернуть весь массив без изменений
+    filterPost (items, filter) {
+        if(filter === 'like') {
+            return items.filter((item) => item.like)
+        } else{
+            return items
+        }
+    }
     
     searchPost (items, term) {
         // Проверяем кол-во символов в term , если пусто(пользователь нечего не ввел или стер) тогда мы возвращаем посты которые у нас прихоят в dataBase (в оригиналe)
@@ -146,16 +157,32 @@ export default class  App extends React.Component {
         this.setState({
             term: term
         })
+    }
 
+    onFilterSelect(filter) {
+        this.setState({
+            filter: filter
+        }) 
     }
     render () {
-        const {dataBase, term}=this.state;
+        const {dataBase, term, filter}=this.state;
         const liked = dataBase.filter((item) => item.like).length;
         const allPost = dataBase.length;
 
-        //Мы это делаем для того что бы при вводе в посковую строку высвечивалсь только те посты в которых есть совпадения (searchPost (items, term))
-        // visiblePosts содержит  посты которые совпадают с тем что ввёл польховаель в строку поиска (term)
-        const visiblePosts = this.searchPost(dataBase, term);
+        /*  1)   Мы это делаем для того что бы при вводе в посковую строку показать на экране только те посты в которых есть совпадения (searchPost (items, term))
+            2)    visiblePosts содержит  посты которые совпадают с тем что ввёл польховаель в строку поиска (term)
+            Изначально до фильтрации
+
+            const visiblePosts = this.searchPost(dataBase, term);
+
+         */
+        /*
+            Добавляем  фильтрацию
+
+            3)  Далеее мы фильтруем   с помощью filterPost (items, filter)   уже  показать на экране посты в которых есть совпадения (searchPost (items, term))   см. выше
+         
+        */
+        const visiblePosts = this.filterPost(this.searchPost(dataBase, term), filter);
 
         
 
@@ -167,7 +194,9 @@ export default class  App extends React.Component {
                 <div className='search-panel d-flex'>
                     <SearchPanel
                     onUpdateSearchPost={this.onUpdateSearchPost}/>
-                    <PostStatusFilter/>
+                    <PostStatusFilter
+                    filter={filter}
+                    onFilterSelect={this.onFilterSelect}/>
                 </div>
                 <PostList 
                     visiblePosts={visiblePosts} 
